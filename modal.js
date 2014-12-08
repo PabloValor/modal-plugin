@@ -34,4 +34,7 @@
 	 }
 })();
 
-var myModal = new Modal();
+var myModal = new Modal({
+	content: 'Howdy',
+	maxWidth: 600
+});
