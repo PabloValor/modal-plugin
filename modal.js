@@ -25,7 +25,55 @@
 	// Public Methods
 	Modal.prototype.open = function() {
 
+                // build Modal
+                buildOut.call(this);
+
+                //Initialize our event listeners
+                initializeEvents.call(this);
+
+                /*
+                    After adding elements to the DOM, use getComputedStyle to
+                    force the browser to recalc and recognize the elements 
+                    that we just added. This is so that CSS animation has a start
+                    point.
+                */
+
+                window.getComputedStyle(this.modal).height;
+
+                /*
+                    Add our open class and check if the modal is taller than the window
+                    If so, our anchored class is also applied
+                */
+
+                this.modal.className = this.modal.className + 
+                (this.modal.offsetHeight > window.innerHeight ?
+                " class-open class-anchored" : "class-open" );
+
+                this.overlay.className = this.overlay.className + " class-open";
 	}
+
+            Modal.prototype.close = function() {
+                // Store the value of this
+                var _= this;
+
+                // Remove the open class name
+                this.modal.className = this.modal.className.replace( " class-open", "");
+                this.overlay.className = this.modal.className.replace(" class-open", "");
+                
+                /*
+                    Listen for CSS transitioned events and then 
+                    remove nodes from the DOM
+                */
+
+                this.modal.addEventListener(this.transitionEnd, function() {
+                    _.modal.parentNode.removeChild(_.modal);
+                });
+
+                this.overlay.addEventListener(this.transitionEnd, function() {
+                    if(_.overlay.parentNode) _.overlay.parentNode.removeChild(_.overlay);
+                });
+            }
+
 
 	// Private Methods
 	function buildOut() {
